@@ -7,27 +7,32 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if platform?("ubuntu","debian","redhat","centos","fedora","scientific","amazon")
-  Chef::Log.debug("unix platform")
+#include_attribute "java"
 
-  #unix
-  ark "weblogic" do
-     url 'http://someurl.example.com/weblogic.tar.gz'
-     version '10.3'        
-     checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
+bea_home = node['weblogic']['bea_home']
+java_home = node['java']['java_home']
+installer = node['weblogic']['installer']
+
+if File.exists?(bea_home)
+  Chef::Log.info("#{bea_home} already exists.....not installing WebLogic")
+else
+  Chef::Log.info("#{bea_home} does not exist")
+
+  tmp_dir = "c:\\temp"
+  silentxml = "#{tmp_dir}\\silent.xml"
+
+  directory tmp_dir do
+    action :create
+  end
+
+  template silentxml do
+    source "silent.xml.erb"
   end
 
   execute "weblogic" do
-    #run bin file from ark download
-    command "weblogic.bin"
-    #creates "/var/lib/slapd/uid.bdb"
+    Chef::Log.info("installer=#{installer}")
+    command "#{installer} -mode=silent -silent_xml=#{silentxml} -log=#{tmp_dir}\\silent.log"
     action :run
   end
-else 
-  Chef::Log.debug("windows platform")
-  #windows
-  windows_package "weblogic" do
-    source "http://someurl.example.com/weblogic.exe"
-    action :install
-  end
 end
+
