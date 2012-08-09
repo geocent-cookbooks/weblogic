@@ -11,7 +11,7 @@
 
 bea_home = node['weblogic']['bea_home']
 java_home = node['java']['java_home']
-installer = node['weblogic']['installer']
+installer_url = node['weblogic']['installer_url']
 
 if File.exists?(bea_home)
   Chef::Log.info("#{bea_home} already exists.....not installing WebLogic")
@@ -21,6 +21,9 @@ else
   tmp_dir = "c:\\temp"
   silentxml = "#{tmp_dir}\\silent.xml"
 
+  installer_dir = node['weblogic']['installer_dir']
+  installer = "#{installer_dir}\\weblogic.exe"
+
   directory tmp_dir do
     action :create
   end
@@ -28,6 +31,11 @@ else
   template silentxml do
     source "silent.xml.erb"
   end
+
+  remote_file installer do
+    source "#{installer_url}"
+    action :create_if_missing
+  end 
 
   execute "weblogic" do
     Chef::Log.info("installer=#{installer}")
