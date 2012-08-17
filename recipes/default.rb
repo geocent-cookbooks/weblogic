@@ -35,12 +35,20 @@ else
   remote_file installer do
     source "#{installer_url}"
     action :create_if_missing
-  end 
+  end
 
   execute "weblogic" do
     Chef::Log.info("installer=#{installer}")
     command "#{installer} -mode=silent -silent_xml=#{silentxml} -log=#{tmp_dir}\\silent.log"
     action :run
   end
+
 end
 
+nodemgrprops = "#{bea_home}\\wlserver_10.3\\common\\nodemanager\\nodemanager.properties"
+template nodemgrprops do
+    source "nodemanager.properties.erb"
+    notifies :restart, "service[Oracle WebLogic NodeManager (c_bea_wlserver_10.3)]"
+end
+
+service "Oracle WebLogic NodeManager (c_bea_wlserver_10.3)"
