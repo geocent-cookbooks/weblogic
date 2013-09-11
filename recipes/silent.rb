@@ -1,9 +1,6 @@
 #
-# Author:: Nick Dobson
 # Cookbook Name:: weblogic
-# Recipe:: default
-#
-# Copyright 2013, Nick Dobson
+# Recipe:: weblogic
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,7 +26,7 @@ if platform?("windows")
   template "#{tmp_dir}/weblogic-silent.xml" do
     source "silent.xml.erb"
   end
-  
+
   windows_package node['weblogic']['windows']['package_name'] do
         source node['weblogic']['installer_url']
         action :install
