@@ -75,11 +75,12 @@ Vagrant.configure("2") do |config|
   config.vm.define :test_centos do |box|
     box.vm.hostname = "test-centos"
     #box.vm.box = "opscode_centos-5.9_chef-11.4.0.box"
-    box.vm.box = "opscode_centos-5.9_provisionerless"
-    box.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box"
+    box.vm.box = "opscode_centos-6.4_chef-11.4.4"
+    #box.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box"
+    box.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-6.4_chef-11.4.4.box"
     box.vm.network :private_network, ip: "33.33.33.21"
     box.vm.network :forwarded_port, guest: 6001, host:6001
-    box.omnibus.chef_version = "11.4.0"
+    #box.omnibus.chef_version = "11.4.0"
 
     box.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--memory", "1024"]
